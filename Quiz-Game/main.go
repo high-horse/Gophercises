@@ -28,6 +28,8 @@ func main() {
 	timer := time.NewTimer(time.Duration(*timelimit) * time.Second)
 
 	correct := 0
+	// problemloop is a lebel
+problemloop:
 	for index, rec := range records {
 		question, answer := rec[0], rec[1]
 		fmt.Printf("Question #%d: %s = ", index+1, question)
@@ -43,7 +45,8 @@ func main() {
 		select {
 		case <-timer.C:
 			fmt.Printf("\nPoints earned: %d/%d\n", correct, len(records))
-			return
+			// return
+			break problemloop
 		case ans := <-ansCh:
 			if strings.EqualFold(ans, answer) {
 				correct++
@@ -52,10 +55,8 @@ func main() {
 				fmt.Println("incorrect")
 			}
 		}
-
 	}
-	fmt.Printf("\nPoints earned: %d/%d", correct, len(records))
-
+	fmt.Printf("Points earned: %d/%d", correct, len(records))
 }
 
 func checkErr(err error, cause string) {
