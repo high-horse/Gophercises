@@ -26,35 +26,35 @@ func main() {
 	checkErr(err, "error reading csv")
 
 	timer := time.NewTimer(time.Duration(*timelimit) * time.Second)
-	
 
 	correct := 0
 	for index, rec := range records {
+		question, answer := rec[0], rec[1]
+		fmt.Printf("Question #%d: %s = ", index+1, question)
 
-		select {
-		case <- timer.C :
-			fmt.Printf("Points earned: %d/%d\n", correct, len(records))
-			return
-		default:
-			question, answer := rec[0], rec[1]
-			fmt.Printf("QN %d . %s\n", index+1, question)
-
+		ansCh := make(chan string)
+		go func ()  {
 			reader := bufio.NewReader(os.Stdin)
 			ans, err := reader.ReadString('\n')
 			checkErr(err, "error reading answer")
 			ans = strings.TrimSpace(ans)
-
+			ansCh <-ans
+		}()
+		select {
+		case <-timer.C:
+			fmt.Printf("\nPoints earned: %d/%d\n", correct, len(records))
+			return
+		case ans := <-ansCh :
 			if strings.EqualFold(ans, answer) {
 				correct++
 				fmt.Println("correct!")
 			} else {
 				fmt.Println("incorrect")
 			}
-
 		}
-		
+
 	}
-	fmt.Printf("Points earned: %d/%d", correct, len(records))
+	fmt.Printf("\nPoints earned: %d/%d", correct, len(records))
 
 }
 

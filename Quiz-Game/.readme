@@ -19,3 +19,8 @@ This is a simple quiz game implemented in Go. It presents a series of questions 
 '''go run main.go
 
 '''
+
+# Instruction to run
+go run main.go --file "questions.csv" --limit=5
+or just 
+go run main.go 
