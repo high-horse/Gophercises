@@ -33,18 +33,18 @@ func main() {
 		fmt.Printf("Question #%d: %s = ", index+1, question)
 
 		ansCh := make(chan string)
-		go func ()  {
+		go func() {
 			reader := bufio.NewReader(os.Stdin)
 			ans, err := reader.ReadString('\n')
 			checkErr(err, "error reading answer")
 			ans = strings.TrimSpace(ans)
-			ansCh <-ans
+			ansCh <- ans
 		}()
 		select {
 		case <-timer.C:
 			fmt.Printf("\nPoints earned: %d/%d\n", correct, len(records))
 			return
-		case ans := <-ansCh :
+		case ans := <-ansCh:
 			if strings.EqualFold(ans, answer) {
 				correct++
 				fmt.Println("correct!")
@@ -60,11 +60,7 @@ func main() {
 
 func checkErr(err error, cause string) {
 	if err != nil {
-		exitGracefully(err, cause)
+		fmt.Fprintf(os.Stderr, "ERROR \n%s\n%v\n", cause, err)
+		os.Exit(1)
 	}
-}
-
-func exitGracefully(err error, cause string) {
-	fmt.Fprintf(os.Stderr, "ERROR: %s\n%v\n", cause, err)
-	os.Exit(1)
 }
