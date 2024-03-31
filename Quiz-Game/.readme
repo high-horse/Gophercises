@@ -1,0 +1,21 @@
+# Quiz Game
+
+This is a simple quiz game implemented in Go. It presents a series of questions to the user, prompts for answers, and keeps track of correct and incorrect responses.
+
+## Usage
+
+1. Clone the repository:
+
+'''git clone https://github.com/yourusername/quiz-game.git'''
+
+
+2. Navigate to the project directory:
+
+'''cd quiz-game'''
+
+
+3. Run the program:
+
+'''go run main.go
+
+'''
