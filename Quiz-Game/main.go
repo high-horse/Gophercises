@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"flag"
 	"fmt"
+	"math/rand"
 	"os"
 	"strings"
 	"time"
@@ -13,7 +14,9 @@ import (
 func main() {
 	// func String(name string, value string, usage string) *string
 	filename := flag.String("file", "questions.csv", "question, answers csv")
-	timelimit := flag.Int("limit", 30, "time limit for quiz in seconds")
+	timelimit := flag.Int("limit", 60, "time limit for quiz in seconds")
+	shuffle := flag.Bool("shuffle", false, "shuffle questions (bool)")
+
 	flag.Parse()
 
 	file, err := os.Open(*filename)
@@ -24,6 +27,12 @@ func main() {
 	reader := csv.NewReader(file)
 	records, err := reader.ReadAll()
 	checkErr(err, "error reading csv")
+
+	if *shuffle {
+		shuffleRecord(records)
+	}
+
+	// shuffle the records
 
 	timer := time.NewTimer(time.Duration(*timelimit) * time.Second)
 
@@ -63,5 +72,13 @@ func checkErr(err error, cause string) {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "ERROR \n%s\n%v\n", cause, err)
 		os.Exit(1)
+	}
+}
+
+func shuffleRecord(records [][]string) {
+	rand.Seed(time.Now().UnixNano())
+	for i := len(records) - 1; i > 0; i-- {
+		j := rand.Intn(i + 1)
+		records[i], records[j] = records[j], records[i]
 	}
 }
