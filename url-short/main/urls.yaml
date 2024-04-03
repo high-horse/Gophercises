@@ -1,0 +1,16 @@
+- path: /char-gpt
+  url: https://chat.openai.com
+- path: /Gophercises
+  url: https://github.com/high-horse/Gophercises
+- path: /char-gpt
+  url: https://chat.openai.com
+- path: /go-initials
+  url: https://github.com/high-horse/go-initials
+- path: /go-cli 
+  url: https://github.com/high-horse/go-cli
+- path: /leetcode-solutions
+  url: https://github.com/high-horse/leetcode-solutions
+- path: /rs-tauri-ts
+  url: https://github.com/high-horse/rs-tauri-ts
+- path: /portfolio
+  url: https://github.com/high-horse/portfolio
