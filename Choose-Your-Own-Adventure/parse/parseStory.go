@@ -2,7 +2,7 @@ package parse
 
 import (
 	"encoding/json"
-	"log"
+	"cyoa/common"
 	"os"
 )
 
@@ -22,22 +22,16 @@ type Story map[string]Chapter
 func ParseFiles(filename string) Story {
 
 	file, err := os.Open(filename)
-	check(err, "error opening file")
+	common.Check(err, "error opening file")
 	defer file.Close()
 
 	d := json.NewDecoder(file)
 	var story Story
 	err = d.Decode(&story)
-	check(err, "parsing the story")
+	common.Check(err, "parsing the story")
 
 	// fmt.Println("%+v\n", story)
 
 	return story
 }
 
-func check(err error, msg string) {
-	if err != nil {
-		log.Fatalf("ERROR: %s \n%v", msg, err)
-		os.Exit(1)
-	}
-}

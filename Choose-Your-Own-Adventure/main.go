@@ -6,7 +6,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 	"path"
 )
 
@@ -24,13 +23,6 @@ func main() {
 	http.HandleFunc("/{arc}", handleArc)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
-}
-
-func check(err error, msg string) {
-	if err != nil {
-		log.Fatalf("ERROR: %s \n%v", msg, err)
-		os.Exit(1)
-	}
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
