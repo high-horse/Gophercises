@@ -7,21 +7,24 @@ import (
 	"log"
 	"net/http"
 	"path"
+	"strconv"
 )
 
 var S parse.Story
 
 func main() {
+	port := flag.Int("port", 8000, "port to run the app on")
 	filename := flag.String("file", "files/adventure.json", "file containing adventure json")
 	flag.Parse()
 	println("Generating Story...")
 
 	// parse file and read from file
 	S = parse.ParseFiles(*filename)
-
+	println("server running on port ", *port)
 	http.HandleFunc("/", handler)
 	http.HandleFunc("/{arc}", handleArc)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(*port), nil))
+	
 
 }
 
