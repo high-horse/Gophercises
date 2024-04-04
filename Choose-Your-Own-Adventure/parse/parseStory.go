@@ -1,7 +1,8 @@
-package main
+package parse
 
 import (
 	"encoding/json"
+	"log"
 	"os"
 )
 
@@ -32,4 +33,11 @@ func ParseFiles(filename string) Story {
 	// fmt.Println("%+v\n", story)
 
 	return story
+}
+
+func check(err error, msg string) {
+	if err != nil {
+		log.Fatalf("ERROR: %s \n%v", msg, err)
+		os.Exit(1)
+	}
 }

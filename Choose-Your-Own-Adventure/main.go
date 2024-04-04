@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cyoa/parse"
 	"flag"
 	"html/template"
 	"log"
@@ -9,7 +10,7 @@ import (
 	"path"
 )
 
-var S Story
+var S parse.Story
 
 func main() {
 	filename := flag.String("file", "files/adventure.json", "file containing adventure json")
@@ -17,7 +18,7 @@ func main() {
 	println("Generating Story...")
 
 	// parse file and read from file
-	S = ParseFiles(*filename)
+	S = parse.ParseFiles(*filename)
 
 	http.HandleFunc("/", handler)
 	http.HandleFunc("/{arc}", handleArc)
