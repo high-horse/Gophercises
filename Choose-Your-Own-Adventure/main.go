@@ -1,40 +1,53 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
+	"flag"
 	"html/template"
 	"log"
 	"net/http"
+	"os"
+	"path"
 )
 
-type Person struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
-}
-
-type Message struct {
-	Text string
-}
+var S Story
 
 func main() {
+	filename := flag.String("file", "files/adventure.json", "file containing adventure json")
+	flag.Parse()
+	println("Generating Story...")
+
+	// parse file and read from file
+	S = ParseFiles(*filename)
+
 	http.HandleFunc("/", handler)
+	http.HandleFunc("/{arc}", handleArc)
 	log.Fatal(http.ListenAndServe(":8080", nil))
+
+}
+
+func check(err error, msg string) {
+	if err != nil {
+		log.Fatalf("ERROR: %s \n%v", msg, err)
+		os.Exit(1)
+	}
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		tmpl := template.Must(template.ParseFiles("templates/index.html"))
-		msg := Message{Text: "Welcome to our server!"}
-		tmpl.Execute(w, msg)
-	} else if r.Method == http.MethodPost {
-		decoder := json.NewDecoder(r.Body)
-		var p Person
-		err := decoder.Decode(&p)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		fmt.Printf("Received: %+v\n", p)
+	tmpl := template.Must(template.ParseFiles("templates/index.html"))
+	msg := S["intro"]
+	tmpl.Execute(w, msg)
+}
+
+func handleArc(w http.ResponseWriter, r *http.Request) {
+	// parse the {string}
+	arc := path.Base(r.URL.Path)
+	println("Arc => ", arc)
+	msg, ok := S[arc]
+	if !ok {
+		tmpl := template.Must(template.ParseFiles("templates/404page.html"))
+		tmpl.Execute(w, nil)
+		return
 	}
+	tmpl := template.Must(template.ParseFiles("templates/index.html"))
+	tmpl.Execute(w, msg)
 }

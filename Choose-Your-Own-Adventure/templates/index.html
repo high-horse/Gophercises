@@ -6,6 +6,16 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>{{.Text}}</h1>
+    <h1>{{.Title}}</h1>
+    <div>
+        {{range .Paragraphs}}
+            <p>{{.}}</p>
+        {{end}}
+    </div>
+    <div>
+        {{range .Options}}
+            <ul><a href="/{{.Chapter}}">{{.Text}}</a></ul>
+        {{end}}
+    </div>
 </body>
 </html>
