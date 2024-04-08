@@ -1,8 +1,9 @@
 package parser
 
 import (
-	"fmt"
+	// "fmt"
 	"io"
+	"strings"
 
 	"golang.org/x/net/html"
 )
@@ -22,7 +23,7 @@ func Parse(r io.Reader) ([]Link, error) {
 	nodes := linkNodes(doc)
 	for _, node := range nodes {
 		links = append(links, buildLink(node))
-		fmt.Println(node)
+		// fmt.Println(node)
 	}
 
 	return links, nil
@@ -36,11 +37,26 @@ func buildLink(n *html.Node) Link {
 			break
 		}
 	}
-	ret.Text = "manual test"
+	ret.Text = text(n)
 	return ret
 }
 
-
+func text(n *html.Node) string {
+	if n.Type == html.TextNode {
+		return n.Data
+	}
+	if n.Type == html.CommentNode {
+		return n.Data
+	}
+	if n.Type != html.ElementNode {
+		return ""
+	}
+	var ret string
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		ret += text(c) + " "
+	}
+	return strings.Join(strings.Fields(ret), " ")
+}
 
 func linkNodes(n *html.Node) []*html.Node {
 	if n.Type == html.ElementNode && n.Data == "a" {
