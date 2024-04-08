@@ -6,6 +6,7 @@ import (
 	"html-link-parser/parser"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 )
@@ -57,15 +58,21 @@ func readFromFile(filename string) (string, error) {
 	return string(bytes), nil
 }
 
-func getHtml(url string) (string, error) {
-	resp, err := http.Get(url)
+func getHtml(req_url string) (string, error) {
+
+	_, err := url.ParseRequestURI(req_url)
 	if err != nil {
-		return "", nil
+		return "", fmt.Errorf("Invalid URL: %v", err)
+	}
+
+	resp, err := http.Get(req_url)
+	if err != nil {
+		return "", fmt.Errorf("URL does not exist: %v", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusForbidden {
-		return "", fmt.Errorf("403 Forbidden: Access to %s is not allowed", url)
+		return "", fmt.Errorf("403 Forbidden: Access to %s is not allowed", req_url)
 	}
 
 	bytes, err := io.ReadAll(resp.Body)
