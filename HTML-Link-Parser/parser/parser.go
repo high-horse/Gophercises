@@ -18,17 +18,37 @@ func Parse(r io.Reader) ([]Link, error) {
 		return nil, err
 	}
 
-	dfs(doc, "")
+	var links []Link
+	nodes := linkNodes(doc)
+	for _, node := range nodes {
+		links = append(links, buildLink(node))
+		fmt.Println(node)
+	}
 
-	return nil, nil
+	return links, nil
 }
-func dfs(doc *html.Node, padding string) {
-	msg := doc.Data
-	if doc.Type == html.ElementNode {
-		msg = "<" + msg + ">"
+
+func buildLink(n *html.Node) Link {
+	var ret Link
+	for _, attr := range n.Attr {
+		if attr.Key == "href" {
+			ret.Href = attr.Val
+			break
+		}
 	}
-	fmt.Println(padding, msg)
-	for c := doc.FirstChild; c != nil; c = c.NextSibling {
-		dfs(c, padding+"  ")
+	ret.Text = "manual test"
+	return ret
+}
+
+
+
+func linkNodes(n *html.Node) []*html.Node {
+	if n.Type == html.ElementNode && n.Data == "a" {
+		return []*html.Node{n}
 	}
+	var ret []*html.Node
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		ret = append(ret, linkNodes(c)...)
+	}
+	return ret
 }
