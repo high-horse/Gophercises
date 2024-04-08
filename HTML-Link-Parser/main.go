@@ -43,7 +43,10 @@ func main() {
 	r := strings.NewReader(text)
 	links, err := parser.Parse(r)
 	checkErr(err, "parse file and generate links")
-	fmt.Printf("%+v\n", links)
+	for _, link := range links {
+		fmt.Println(link)
+	}
+	// fmt.Printf("%+v\n", links)
 }
 
 func readFromFile(filename string) (string, error) {
