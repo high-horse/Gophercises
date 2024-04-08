@@ -31,7 +31,7 @@ func main() {
 	if *url != "" {
 		var err error
 		text, err = getHtml(*url)
-		println(text)
+		// println(text)
 		checkErr(err, "getting html data")
 	} else if *filename != "" {
 		var err error
