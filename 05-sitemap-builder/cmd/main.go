@@ -109,6 +109,10 @@ func bfs(urlStr string, maxDepth int) []string {
 
 	for i := 0; i <= maxDepth; i++ {
 		q, nq = nq, make(map[string]struct{})
+
+		// if len(q) == 0 {
+		// 	break
+		// }
 		
 		for url,_ := range q {
 			if _, ok := seen[url]; ok {
@@ -119,13 +123,17 @@ func bfs(urlStr string, maxDepth int) []string {
 			links := get(url)
 			// for _, link := range get(url) {
 			for _, link := range links{
+
+				// if _, ok := seen[link]; ok {
+				// 	continue
+				// }
 				nq[link] = struct{}{}
 			}
 		}
 	}
 
 	ret := make([]string, 0, len(seen))
-	for url, _ := range seen {
+	for url := range seen {
 		ret = append(ret, url)
 	}
 	return ret
