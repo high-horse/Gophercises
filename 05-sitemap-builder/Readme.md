@@ -21,6 +21,7 @@ Clone the repository:
 ```bash
 git clone https://github.com/yourusername/sitemap-builder.git
 cd sitemap-builder
+make run
 ```
 
 ## Usage
