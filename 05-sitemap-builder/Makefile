@@ -5,7 +5,7 @@
 
 help:
 	@echo "Usage:"
-	@echo "  make run [URL=] [DEPTH=2]    Run the sitemap builder"
+	@echo "  make run [URL=] [DEPTH=]    Run the sitemap builder"
 	@echo ""
 	@echo "Options:"
 	@echo "  URL=yoururl.com         Specify the root URL for sitemap generation"
