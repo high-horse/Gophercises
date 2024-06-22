@@ -73,6 +73,7 @@ func printXml(toXml urlset) error {
 	if err := enc.Encode(toXml); err != nil {
 		fmt.Fprintln(os.Stderr, "Error encoding XML to console:", err)
 	}
+	println()
 
 	return nil
 
