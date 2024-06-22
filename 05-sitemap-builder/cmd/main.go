@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/xml"
 	"flag"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 
 	// "io"
@@ -23,6 +25,18 @@ import (
 	6. Print out XML
 */
 
+const (
+	xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9"
+)
+type loc struct {
+	Value string `xml:"loc"`
+}
+
+type urlset struct {
+	Urls  []loc  `xml:"url"`
+	Xmlns string `xml:"xmlns,attr"`
+}
+
 func main() {
 	urlFlag := flag.String("url", "http://gophercises.com/", "url tat you want to create sitemap for")
 	maxDepth := flag.Int("depth", 50, "max depth of links to follow")
@@ -30,9 +44,59 @@ func main() {
 	
 	// pages := get(*urlFlag)
 	pages := bfs(*urlFlag, *maxDepth)
-	for _, page := range pages {
-		fmt.Println(page)
+
+	toXml := urlset {
+		Xmlns: xmlns,
 	}
+	for _, page := range pages {
+		toXml.Urls = append(toXml.Urls, loc{page})
+	}
+
+	// fmt.Print(xml.Header)
+	// enc := xml.NewEncoder(os.Stdout)
+	// enc.Indent("", "  ")
+	// if err := enc.Encode(toXml); err != nil {
+	// 	fmt.Fprintln(os.Stderr, err)
+	// 	os.Exit(1)
+	// }
+	// println()
+
+	printXml(toXml)
+	createFile("sitemap.xml", toXml)
+}
+
+func printXml(toXml urlset) error {
+
+	fmt.Print(xml.Header)
+	enc := xml.NewEncoder(os.Stdout)
+	enc.Indent("", "  ")
+	if err := enc.Encode(toXml); err != nil {
+		fmt.Fprintln(os.Stderr, "Error encoding XML to console:", err)
+	}
+
+	return nil
+
+}
+
+func createFile(filename string, toXml urlset) error{
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.WriteString(xml.Header)
+	if err != nil {
+		return err
+	}
+
+	enc := xml.NewEncoder(file)
+	enc.Indent("", "  ")
+	if err := enc.Encode(toXml); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func bfs(urlStr string, maxDepth int) []string {
