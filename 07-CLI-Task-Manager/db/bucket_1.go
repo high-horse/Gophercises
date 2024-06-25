@@ -17,23 +17,24 @@ type Work struct {
 var bucket_name = []byte("work")
 var bucket *bolt.DB
 
-func InitBucket() {
-	var err error
-	db, err = bolt.Open("my.db", 0600,  &bolt.Options{Timeout: 1 * time.Second})
 
+func InitBucket(dbPath string) error {
+	var err error
+	db, err = bolt.Open(dbPath, 0600, &bolt.Options{Timeout: 1 * time.Second})
 	if err != nil {
-		panic(err)
+		return err
 	}
-	db.Update(func(tx *bolt.Tx) error {
+	
+	return db.Update(func(tx *bolt.Tx) error {
 		_, err := tx.CreateBucketIfNotExists(bucket_name)
 		return err
 	})
 }
 
-func CreateWork (task string) (int, error) {
+func CreateWork(task string) (int, error) {
 	var id int
 	work := Work{
-		Name: task,
+		Name:      task,
 		Completed: false,
 	}
 	err := db.Update(func(tx *bolt.Tx) error {
@@ -53,7 +54,6 @@ func CreateWork (task string) (int, error) {
 	}
 	return id, nil
 }
-
 
 func ListWork() ([]Work, error) {
 	var works []Work
@@ -76,7 +76,6 @@ func ListWork() ([]Work, error) {
 	return works, nil
 }
 
-
 func DeleteWork(key int) error {
 	return db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket(bucket_name)
@@ -94,7 +93,7 @@ func UpdateWork(key int, status bool) error {
 		return err
 	}
 
-	err =  db.Update(func(tx *bolt.Tx) error {
+	err = db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket(bucket_name)
 
 		// work.ID = key

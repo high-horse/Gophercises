@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cli-task/db"
 	"fmt"
 	"strings"
 
@@ -14,6 +15,13 @@ var addCmd = &cobra.Command{
 		// fmt.Println("add called")
 		task := strings.Join(args, " ")
 		fmt.Printf("Added \"%s\" to task list \n", task)
+		id, err := db.CreateWork(task)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		fmt.Printf("Created Task ID: %d\n", id)
 	},
 }
 

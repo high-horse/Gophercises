@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"cli-task/db"
 	"fmt"
 	"strconv"
 
@@ -21,6 +22,15 @@ var doCmd = &cobra.Command{
 			ids = append(ids, id)
 		}
 		fmt.Println(ids)
+
+		for _, id := range ids {
+			err := db.UpdateWork(id, true)
+			if err != nil {
+				fmt.Println("Failed to mark the task as done: ", id)
+				continue
+			}
+			fmt.Printf("Marked task %d as done\n", id)
+		}
 	},
 }
 
