@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
+	"strconv"
 
 	"github.com/spf13/cobra"
 )
@@ -11,8 +11,16 @@ var doCmd = &cobra.Command{
 	Use:   "do",
 	Short: "mark your task done",
 	Run: func(cmd *cobra.Command, args []string) {
-		task := strings.Join(args, " ")
-		fmt.Printf("Added \"%s\" to task list \n", task)
+		var ids []int
+		for _, arg := range args {
+			id, err := strconv.Atoi(arg)
+			if err != nil {
+				fmt.Println("Failed to parse the argument: ", arg)
+				continue
+			}
+			ids = append(ids, id)
+		}
+		fmt.Println(ids)
 	},
 }
 
