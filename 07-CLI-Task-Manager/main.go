@@ -15,8 +15,8 @@ func main() {
 	must(err)
 	println(home)
 	dbPath := filepath.Join(home, "tasks.db")
-	// must(db.Init(dbPath))
-	must(db.InitBucket(dbPath))
+	must(db.Init(dbPath))
+	// must(db.InitBucket(dbPath))
 
 	must(cmd.RootCmd.Execute())
 }
