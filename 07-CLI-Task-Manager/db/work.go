@@ -2,6 +2,7 @@ package db
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/boltdb/bolt"
@@ -15,16 +16,9 @@ type Work struct {
 }
 
 var bucket_name = []byte("work")
-var bucket *bolt.DB
+func InitBucketWork() error {
+	// var err error
 
-
-func InitBucket(dbPath string) error {
-	var err error
-	db, err = bolt.Open(dbPath, 0600, &bolt.Options{Timeout: 1 * time.Second})
-	if err != nil {
-		return err
-	}
-	
 	return db.Update(func(tx *bolt.Tx) error {
 		_, err := tx.CreateBucketIfNotExists(bucket_name)
 		return err
@@ -39,7 +33,15 @@ func CreateWork(task string) (int, error) {
 	}
 	err := db.Update(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket(bucket_name)
-		id64, _ := bucket.NextSequence()
+		if bucket == nil {
+			return fmt.Errorf("bucket %s not found", string(bucket_name))
+		}
+
+		id64, err := bucket.NextSequence()
+		if err != nil {
+			return err
+		}
+		
 		id = int(id64)
 		key := itob(id)
 
@@ -59,6 +61,11 @@ func ListWork() ([]Work, error) {
 	var works []Work
 	err := db.View(func(tx *bolt.Tx) error {
 		bucket := tx.Bucket(bucket_name)
+
+		if bucket == nil {
+			return fmt.Errorf("bucket %s not found", string(bucket_name))
+		}
+
 		c := bucket.Cursor()
 		for k, v := c.First(); k != nil; k, v = c.Next() {
 			var work Work
@@ -66,6 +73,7 @@ func ListWork() ([]Work, error) {
 			if err != nil {
 				return err
 			}
+			work.ID = btoi(k)
 			works = append(works, work)
 		}
 		return nil

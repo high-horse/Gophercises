@@ -14,8 +14,9 @@ func main() {
 	home, err := homedir.Dir()
 	must(err)
 	println(home)
-	dbPath := filepath.Join(home, "tasks.db")
+	dbPath := filepath.Join(home, "cli-task-manager.db")
 	must(db.Init(dbPath))
+	must(db.InitBucketWork())
 	// must(db.InitBucket(dbPath))
 
 	must(cmd.RootCmd.Execute())
