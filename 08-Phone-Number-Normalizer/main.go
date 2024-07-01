@@ -19,19 +19,21 @@ const (
 
 func main(){
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s sslmode=disable", host, port, user, password)
-
-	db, err := sql.Open("postgres", psqlInfo)
-	must(err)
-	must(resetDB(db, dbname))
-	defer db.Close()
+	// db, err := sql.Open("postgres", psqlInfo)
+	// must(err)
+	// must(resetDB(db, dbname))
+	// defer db.Close()
 
 	psqlInfo  = fmt.Sprintf("%s dbname=%s", psqlInfo, dbname)
-	db, err = sql.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo)
 	must(err)
 	defer db.Close()
 
 	must(db.Ping())
-	must(createTable(db, "phonebook"))
+	// must(createTable(db, "phonebook"))
+	id, err := insertPhone(db, "1234567890")
+	must(err)
+	println("last id:",id)
 }
 func createTable(db *sql.DB, name string) error {
 	statement := `
@@ -44,15 +46,17 @@ func createTable(db *sql.DB, name string) error {
 	return err
 }
 
-// func insertPhone(db *sql.DB, phone string) (int, error) {
-// 	statement := `
-// 		INSERT INTO phone_numbers (value) VALUES(`+ phone +`)
-// 	`
-// 	some, err := db.Exec(statement)
-// 	if err != nil{
-// 		return -1, err
-// 	}
-// }
+func insertPhone(db *sql.DB, phone string) (int, error) {
+	statement := `
+		INSERT INTO phone_numbers (value) VALUES($1) RETURNING id
+	`
+	var id int
+	err := db.QueryRow(statement, phone).Scan(&id)
+	if err != nil{
+		return -1, err
+	}
+	return id, nil
+}
 
 
 func resetDB(db *sql.DB, name string) error {
