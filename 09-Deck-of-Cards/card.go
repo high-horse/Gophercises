@@ -1,59 +1,10 @@
-//go:generate stringer -type=Suit,Rank
-
 package deck
 
 import (
-	"fmt"
 	"sort"
+	"time"
+	"math/rand"
 )
-
-type Suit uint8
-
-const (
-	Spade Suit = iota
-	Diamond
-	Club
-	Heart
-	Joker // This is special case.
-)
-
-var suits = [...]Suit{Spade, Diamond, Club, Heart}
-
-type Rank uint8
-
-const (
-	_ Rank = iota // Skip 0
-	Ace
-	Two
-	Three
-	Four
-	Five
-	Six
-	Seven
-	Eight
-	Nine
-	Ten
-	Jack
-	Queen
-	King
-)
-
-const (
-	minRank = Ace
-	maxRank = King
-)
-
-type Card struct {
-	Suit
-	Rank
-}
-
-func (c Card) String() string {
-	if c.Suit == Joker {
-		return c.Suit.String()
-	}
-	return fmt.Sprintf("%s of %ss", c.Rank.String(), c.Suit.String())
-}
 
 
 func New(opts ...func([]Card) []Card) []Card {
@@ -96,4 +47,14 @@ func Less(cards []Card) func(i,j int)bool {
 
 func absRank(c Card) int {
 	return int(c.Suit)*int(c.Rank) + int(c.Rank)
+}
+
+func Shuffle(cards []Card) []Card {
+	ret := make([]Card, len(cards))
+	r := rand.New(rand.NewSource(time.Now().Unix()))
+	perm := r.Perm(len(cards))
+	for i,j := range perm {
+		ret[i] = cards[j]
+	}
+	return ret
 }
