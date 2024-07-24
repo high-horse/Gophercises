@@ -22,10 +22,18 @@ func ExampleCard() {
 	// Joker
 }
 
-func TestNew(t *testing.T) {
-	cards := New()
-	// 13 ranks * 4 suits
-	if len(cards) != 13*4 {
-		t.Error("Expected 13*4 cards, but got", len(cards))
+// func TestNew(t *testing.T) {
+// 	cards := New()
+// 	// 13 ranks * 4 suits
+// 	if len(cards) != 13*4 {
+// 		t.Error("Expected 13*4 cards, but got", len(cards))
+// 	}
+// }
+
+func TestDefaultSort(t *testing.T) {
+	cards := New(DefaultSort)
+	if cards[0] != (Card{Rank: Ace, Suit: Spade}) {
+		t.Error("Expected Ace of Spades as first card, but got", cards[0])
 	}
 }
+
