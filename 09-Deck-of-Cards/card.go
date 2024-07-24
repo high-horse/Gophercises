@@ -2,6 +2,8 @@
 
 package deck
 
+import "fmt"
+
 type Suit uint8
 
 const (
