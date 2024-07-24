@@ -15,10 +15,10 @@ func ExampleCard() {
 
 
 	// Output: 
-	// Ace of Heart
-	// Two of Spade
-	// Nine of Diamond
-	// Jack of Club
+	// Ace of Hearts
+	// Two of Spades
+	// Nine of Diamonds
+	// Jack of Clubs
 	// Joker
 }
 

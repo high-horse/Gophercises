@@ -1,7 +1,7 @@
 
 package deck
 
-import "fmt"
+// import "fmt"
 //go:generate stringer -type=Suit,Rank
 
 type Suit uint8
@@ -46,15 +46,15 @@ type Card struct {
 }
 
 // The String method should be uncommented and corrected if needed.
-func (c Card) String() string {
-    if c.Suit == Joker {
-        return c.Suit.String()
-    }
-    return fmt.Sprintf("%s of %s", c.Rank.String(), c.Suit.String())
-}
 // func (c Card) String() string {
 //     if c.Suit == Joker {
 //         return c.Suit.String()
 //     }
-//     return c.Rank.String() + " of " + c.Suit.String() + "s"
+//     return fmt.Sprintf("%s of %s", c.Rank.String(), c.Suit.String())
 // }
+func (c Card) String() string {
+    if c.Suit == Joker {
+        return c.Suit.String()
+    }
+    return c.Rank.String() + " of " + c.Suit.String() + "s"
+}
