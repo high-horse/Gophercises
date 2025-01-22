@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"normalizer/db"
+	storage "normalizer/db"
 )
 
 func Normalize(phone string) string {
@@ -17,11 +17,12 @@ func Normalize(phone string) string {
 
 func main() {
 	println("starting main func")
-	DB, err := db.InitDB()
+	DB, err := storage.InitDB()
 	if err != nil {
 		panic(err)
 	}
 	defer DB.Close()
 	println("starting main func")
 	
+	storage.PrepareDB()
 }
