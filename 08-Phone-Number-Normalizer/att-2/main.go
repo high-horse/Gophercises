@@ -1,6 +1,9 @@
 package main
 
-import "bytes"
+import (
+	"bytes"
+	"normalizer/db"
+)
 
 func Normalize(phone string) string {
 	var buf  bytes.Buffer
@@ -13,5 +16,12 @@ func Normalize(phone string) string {
 }
 
 func main() {
-
+	println("starting main func")
+	DB, err := db.InitDB()
+	if err != nil {
+		panic(err)
+	}
+	defer DB.Close()
+	println("starting main func")
+	
 }
