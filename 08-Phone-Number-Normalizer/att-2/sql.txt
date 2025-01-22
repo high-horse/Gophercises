@@ -1,0 +1,4 @@
+ sqlite3 phone.db
+ 
+ .exit
+ .tables

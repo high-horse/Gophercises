@@ -12,9 +12,13 @@ type DB struct {
     *sql.DB
 }
 
+// const (
+//     drivername = "sqlite3"
+//     datasourcename = "../phone.db"
+// )
 const (
     drivername = "sqlite3"
-    datasourcename = "../phone.db"
+    datasourcename = "./phone.db" // Correct path
 )
 
 func InitDB() (DB, error) {
@@ -36,9 +40,11 @@ func PrepareDB() {
 	}
 	createTables(database)
 	seedTables(database)
+	database.Close()
 }
 
 func createTables(db *sql.DB) error {
+	log.Println("creating tables...")
 	stmt := `
 		CREATE TABLE IF NOT EXISTS phone_numbers(
 			id INTEGER NOT NULL PRIMARY KEY,
@@ -53,6 +59,7 @@ func createTables(db *sql.DB) error {
 }
 
 func seedTables(db *sql.DB) error {
+	log.Println("seedng data ...")
 	phonebook := []string{
 		"1234567890",
 		"123 456 7891",

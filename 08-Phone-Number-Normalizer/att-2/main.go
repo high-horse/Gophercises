@@ -17,12 +17,11 @@ func Normalize(phone string) string {
 
 func main() {
 	println("starting main func")
+	storage.PrepareDB()
+	
 	DB, err := storage.InitDB()
 	if err != nil {
 		panic(err)
 	}
 	defer DB.Close()
-	println("starting main func")
-	
-	storage.PrepareDB()
 }
