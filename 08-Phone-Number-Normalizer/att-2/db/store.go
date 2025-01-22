@@ -12,13 +12,9 @@ type DB struct {
     *sql.DB
 }
 
-// const (
-//     drivername = "sqlite3"
-//     datasourcename = "../phone.db"
-// )
 const (
     drivername = "sqlite3"
-    datasourcename = "./phone.db" // Correct path
+    datasourcename = "./phone.db" 
 )
 
 func InitDB() (DB, error) {
